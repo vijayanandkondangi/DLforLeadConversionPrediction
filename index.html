@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+	<script 
+		src="https://code.jquery.com/jquery-3.3.1.js" 
+		integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" 
+		crossorigin="anonymous">
+	</script>
+	
+	<script lang = "js">
+		
+		// Initialize global variable to instantiate the model
+		var model = "";
+		
+		// Async function for loading the model from the json file
+		async function run()
+		{
+			// Load the trained model from the json file
+			model = await tf.loadLayersModel('model/model.json');
+			// Log the progress in the console log
+			console.log("Model loaded")
+		}
+	
+	
+		// JS to read the input, compose the tensor, invoke the model and display the prediction
+		function predict() 
+		{ 
+			// Read the inputs
+			var lo = document.getElementById("LO").value
+			var ls = document.getElementById("LS").value
+			var dne = document.getElementById("DNE").value
+			var dnc = document.getElementById("DNC").value
+			var tv = document.getElementById("TV").value
+			var ttow = document.getElementById("TTOW").value
+			var pvpv = document.getElementById("PVPV").value
+			var la = document.getElementById("LA").value
+			var spl = document.getElementById("SPL").value
+			var co = document.getElementById("CO").value
+			var srch = document.getElementById("SRCH").value
+			var na = document.getElementById("NA").value
+			var xf = document.getElementById("XF").value
+			var np = document.getElementById("NP").value
+			var da = document.getElementById("DA").value
+			var tr = document.getElementById("TR").value
+			var city = document.getElementById("CITY").value
+			var fc = document.getElementById("FC").value
+			var lna = document.getElementById("LNA").value
+			
+			// Class definitions
+			var LO_Classes   = ["API", "Landing_Page_Submission", "Lead_Add_Form", "Lead_Import"]
+			var LS_Classes   = ["Bing", "Click2call", "Direct_Traffic", "Facebook", "Google", "Olark_Chat", "Organic_Search", "Reference",  "Referral_Sites", "Welingak_Website", "google"]
+			var LA_Classes   = ["Approached_upfront", "Converted_to_Lead", "Email_Bounced", "Email_Link_Clicked", "Email_Opened", "Form_Submitted_on_Website", "Had_a_Phone_Conversation", "Olark_Chat_Conversation", "Page_Visited_on_Website", "SMS_Sent", "Unreachable", "Unsubscribed", "View_in_browser_link_Clicked"]
+			var SPL_Classes  = ["Banking_Investment_And_Insurance", "Business_Administration", "E-Business", "E-COMMERCE", "Finance_Management", "Healthcare_Management", "Hospitality_Management", "Human_Resource_Management", "IT_Projects_Management", "International_Business", "Marketing_Management", "Media_and_Advertising", "Operations_Management", "Others", "Retail_Management", "Rural_and_Agribusiness", "Services_Excellence", "Supply_Chain_Management", "Travel_and_Tourism"]
+			var CO_Classes   = ["Businessman", "Housewife", "Other", "Student", "Unemployed", "Working_Professional"]
+			var CITY_Classes = ["Mumbai", "Other_Cities", "Other_Cities_of_Maharashtra", "Other_Metro_Cities", "Thane_&_Outskirts", "Tier_II_Cities"]
+			var LNA_Classes  = ["Email_Bounced", "Email_Link_Clicked", "Email_Opened", "Had_a_Phone_Conversation", "Modified", "Olark_Chat_Conversation", "Page_Visited_on_Website", "SMS_Sent", "Unreachable", "Unsubscribed"]
+			var YN_Classes   = ["No", "Yes"]
+			
+			// Extract class indexes for categorical fieldset
+			// Convert strings to floats for numeric fields
+			var lo_p = LO_Classes.indexOf(lo);
+			var ls_p = LS_Classes.indexOf(ls);
+			var dne_p = YN_Classes.indexOf(dne);
+			var dnc_p = YN_Classes.indexOf(dnc);
+			var tv_p = parseFloat(tv);
+			var ttow_p = parseFloat(ttow);
+			var pvpv_p = parseFloat(pvpv);
+			var la_p = LA_Classes.indexOf(la);	
+			var spl_p = SPL_Classes.indexOf(spl);
+			var co_p = CO_Classes.indexOf(co);
+			var srch_p = YN_Classes.indexOf(srch);
+			var na_p = YN_Classes.indexOf(na);
+			var xf_p = YN_Classes.indexOf(xf);
+			var np_p = YN_Classes.indexOf(np);
+			var da_p = YN_Classes.indexOf(da);
+			var tr_p = YN_Classes.indexOf(tr);
+			var city_p = CITY_Classes.indexOf(city);
+			var fc_p = YN_Classes.indexOf(fc);
+			var lna_p = LNA_Classes.indexOf(lna);
+			
+			// Compose the tensor
+			const testVal = tf.tensor2d([lo_p, ls_p, dne_p, dnc_p, tv_p, ttow_p, pvpv_p, la_p, spl_p, co_p, srch_p, na_p, xf_p, np_p, da_p, tr_p, city_p, fc_p, lna_p], [1, 19]);
+						
+			// Invoke the model and make the prediction
+			// Pass the tensor composed previously, as the input
+			const prediction = model.predict(testVal)
+			
+			// Fetch the index for max probability from the softmax output
+			var pIndex = tf.argMax(prediction, axis = 1).dataSync()
+							
+			// Display the prediction, the class name corresponding to max probability
+			document.getElementById("OP").value = YN_Classes[pIndex]
+		 } 
+		
+		// Run the async function to load the model
+		run()
+
+	</script> 
+
+</head>
+
+<body>
+
+	<h3>Lead Conversion Prediction</h3>
+
+	<label for="LeadOrigin">Lead Origin</label>
+	<select name="LO" id="LO">
+		<option value=""></option>
+		<option value="API">API</option>
+		<option value="Landing_Page_Submission">Landing_Page_Submission</option>
+		<option value="Lead_Add_Form">Lead_Add_Form</option>
+		<option value="Lead_Import">Lead_Import</option>
+	</select><br>
+	<label for="LeadSource">Lead Source</label>
+	<select name="LS" id="LS">
+		<option value=""></option>
+		<option value="Bing">Bing</option>
+		<option value="Click2call">Click2call</option>
+		<option value="Direct_Traffic">Direct_Traffic</option>
+		<option value="Facebook">Facebook</option>
+		<option value="Google">Google</option>
+		<option value="Olark_Chat">Olark_Chat</option>
+		<option value="Organic_Search">Organic_Search</option>
+		<option value="Reference">Reference</option>
+		<option value="Referral_Sites">Referral_Sites</option>
+		<option value="Welingak_Website">Welingak_Website</option>
+		<option value="google">google</option>
+	</select><br>
+	<label for="DoNotEmail">Do Not Email</label>
+	<select name="DNE" id="DNE">
+		<option value=""></option>
+		<option value="No">No</option>
+		<option value="Yes">Yes</option>
+	</select><br>
+	<label for="DoNotCall">Do Not Call</label>
+	<select name="DNC" id="DNC">
+		<option value=""></option>
+		<option value="No">No</option>
+		<option value="Yes">Yes</option>
+	</select><br>
+	<label for="TotalVisits">Total Visits (0 - 300)</label>
+	<input type="text" id="TV" value=""/><br>
+	<label for="TotalTimeonWebsite">Total Time on Website (0 - 3000 mins)</label>
+	<input type="text" id="TTOW" value=""/><br>
+	<label for="PageViewsPerVisit">Page Views Per Visit (0 - 100)</label>
+	<input type="text" id="PVPV" value=""/><br>
+	<label for="LastActivity">Last Activity</label>
+	<select name="LA" id="LA">
+		<option value=""></option>
+		<option value="Approached_upfront">Approached_upfront</option>
+		<option value="Converted_to_Lead">Converted_to_Lead</option>
+		<option value="Email_Bounced">Email_Bounced</option>
+		<option value="Email_Link_Clicked">Email_Link_Clicked</option>
+		<option value="Email_Opened">Email_Opened</option>
+		<option value="Form_Submitted_on_Website">Form_Submitted_on_Website</option>
+		<option value="Had_a_Phone_Conversation">Had_a_Phone_Conversation</option>
+		<option value="Olark_Chat_Conversation">Olark_Chat_Conversation</option>
+		<option value="Page_Visited_on_Website">Page_Visited_on_Website</option>
+		<option value="SMS_Sent">SMS_Sent</option>
+		<option value="Unreachable">Unreachable</option>
+		<option value="Unsubscribed">Unsubscribed</option>
+		<option value="View_in_browser_link_Clicked">View_in_browser_link_Clicked</option>
+	</select><br>
+	<label for="Specialization">Specialization</label>
+	<select name="SPL" id="SPL">
+		<option value=""></option>
+		<option value="Banking_Investment_And_Insurance">Banking_Investment_And_Insurance</option>
+		<option value="Business_Administration">Business_Administration</option>
+		<option value="E-Business">E-Business</option>
+		<option value="E-COMMERCE">E-COMMERCE</option>
+		<option value="Finance_Management">Finance_Management</option>
+		<option value="Healthcare_Management">Healthcare_Management</option>
+		<option value="Hospitality_Management">Hospitality_Management</option>
+		<option value="Human_Resource_Management">Human_Resource_Management</option>
+		<option value="IT_Projects_Management">IT_Projects_Management</option>
+		<option value="International_Business">International_Business</option>
+		<option value="Marketing_Management">Marketing_Management</option>
+		<option value="Media_and_Advertising">Media_and_Advertising</option>
+		<option value="Operations_Management">Operations_Management</option>
+		<option value="Others">Others</option>
+		<option value="Retail_Management">Retail_Management</option>
+		<option value="Rural_and_Agribusiness">Rural_and_Agribusiness</option>
+		<option value="Services_Excellence">Services_Excellence</option>
+		<option value="Supply_Chain_Management">Supply_Chain_Management</option>
+		<option value="Travel_and_Tourism">Travel_and_Tourism</option>
+	</select><br>
+	<label for="CurrentOccupation">Current Occupation</label>
+	<select name="CO" id="CO">
+		<option value=""></option>
+		<option value="Businessman">Businessman</option>
+		<option value="Housewife">Housewife</option>
+		<option value="Other">Other</option>
+		<option value="Student">Student</option>
+		<option value="Unemployed">Unemployed</option>
+		<option value="Working_Professional">Working_Professional</option>
+	</select><br>
+	<label for="Search">Search</label>
+	<select name="SRCH" id="SRCH">
+		<option value=""></option>
+		<option value="No">No</option>
+		<option value="Yes">Yes</option>
+	</select><br>
+	<label for="NewspaperArticle">Newspaper Article</label>
+	<select name="NA" id="NA">
+		<option value=""></option>
+		<option value="No">No</option>
+		<option value="Yes">Yes</option>
+	</select><br>
+	<label for="XForums">X Forums</label>
+	<select name="XF" id="XF">
+		<option value=""></option>
+		<option value="No">No</option>
+		<option value="Yes">Yes</option>
+	</select><br>
+	<label for="Newspaper">Newspaper</label>
+	<select name="NP" id="NP">
+		<option value=""></option>
+		<option value="No">No</option>
+		<option value="Yes">Yes</option>
+	</select><br>
+	<label for="DigitalAdvertisement">Digital Advertisement</label>
+	<select name="DA" id="DA">
+		<option value=""></option>
+		<option value="No">No</option>
+		<option value="Yes">Yes</option>
+	</select><br>
+	<label for="ThroughRecommendations">Through Recommendations</label>
+	<select name="TR" id="TR">
+		<option value=""></option>
+		<option value="No">No</option>
+		<option value="Yes">Yes</option>
+	</select><br>
+	<label for="City">City</label>
+	<select name="CITY" id="CITY">
+		<option value=""></option>
+		<option value="Mumbai">Mumbai</option>
+		<option value="Other_Cities">Other_Cities</option>
+		<option value="Other_Cities_of_Maharashtra">Other_Cities_of_Maharashtra</option>
+		<option value="Other_Metro_Cities">Other_Metro_Cities</option>
+		<option value="Thane_&_Outskirts">Thane_&_Outskirts</option>
+		<option value="Tier_II_Cities">Tier_II_Cities</option>
+	</select><br>
+	<label for="FreeCopy">Free Copy</label>
+	<select name="FC" id="FC">
+		<option value=""></option>
+		<option value="No">No</option>
+		<option value="Yes">Yes</option>
+	</select><br>
+	<label for="LastNotableActivity">Last Notable Activity</label>
+	<select name="LNA" id="LNA">
+		<option value=""></option>
+		<option value="Email_Bounced">Email_Bounced</option>
+		<option value="Email_Link_Clicked">Email_Link_Clicked</option>
+		<option value="Email_Opened">Email_Opened</option>
+		<option value="Had_a_Phone_Conversation">Had_a_Phone_Conversation</option>
+		<option value="Modified">Modified</option>
+		<option value="Olark_Chat_Conversation">Olark_Chat_Conversation</option>
+		<option value="Page_Visited_on_Website">Page_Visited_on_Website</option>
+		<option value="SMS_Sent">SMS_Sent</option>
+		<option value="Unreachable">Unreachable	</option>
+		<option value="Unsubscribed">Unsubscribed</option>
+	</select><br><br>
+	<input type="button" value = "Predict" onclick="predict()"/><br><br>
+	<label for="Output">Conversion</label>
+	<input type="text" id="OP"/><br><br>
+</body>
+</html>
