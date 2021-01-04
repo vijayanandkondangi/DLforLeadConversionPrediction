@@ -88,11 +88,11 @@
 			const prediction = model.predict(testVal)
 			
 			// Fetch the index for max probability from the softmax output
-			//var prob = tf.argMax(prediction, axis = 1).dataSync()
+			var prob = tf.maximum(prediction, axis = 1).dataSync()
 							
 			// Display the prediction, the class name corresponding to max probability
 			//document.getElementById("OP").value = YN_Classes[pIndex]
-			document.getElementById("OP").value = prediction[0]
+			document.getElementById("OP").value = prob
 		 } 
 		
 		// Run the async function to load the model
