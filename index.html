@@ -91,7 +91,8 @@
 			var pIndex = tf.argMax(prediction, axis = 1).dataSync()
 							
 			// Display the prediction, the class name corresponding to max probability
-			document.getElementById("OP").value = YN_Classes[pIndex]
+			//document.getElementById("OP").value = YN_Classes[pIndex]
+			document.getElementById("OP").value = prediction
 		 } 
 		
 		// Run the async function to load the model
