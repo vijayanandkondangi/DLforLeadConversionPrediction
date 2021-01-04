@@ -88,7 +88,7 @@
 			const prediction = model.predict(testVal)
 			
 			// Fetch the index for max probability from the softmax output
-			var prob = tf.tensor(prediction).arraySync()
+			var prob = prediction.arraySync()
 							
 			// Display the prediction, the class name corresponding to max probability
 			//document.getElementById("OP").value = YN_Classes[pIndex]
