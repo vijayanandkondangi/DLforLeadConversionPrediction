@@ -89,15 +89,8 @@
 			
 			// Fetch the output probability
 			var prob = prediction.arraySync()
-							
-			// Display the prediction based on the probability
-			// IF the model outputs a probability greater than the threshold, outcome is Yes, else No
-			var threshold = 0.5;
-			var outcome = "No";
-			if (prob[0] >= threshold) {
-				outcome = "Yes"
-			}
-			document.getElementById("OP").value = (prob[0] * 100).toFixed(4);
+			var probpercent = prob[0] * 100
+			document.getElementById("OP").value = probpercent.toFixed(4);
 		 } 
 		
 		// Run the async function to load the model
