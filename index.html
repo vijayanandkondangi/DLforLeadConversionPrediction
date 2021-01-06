@@ -89,8 +89,7 @@
 			
 			// Fetch the output probability
 			var prob = prediction.arraySync()
-			var probpercent = prob[0] * 100
-			document.getElementById("OP").value = probpercent
+			document.getElementById("OP").value = prob[0] * 100
 		 } 
 		
 		// Run the async function to load the model
