@@ -97,7 +97,7 @@
 			if (prob[0] >= threshold) {
 				outcome = "Yes"
 			}
-			document.getElementById("OP").value = outcome
+			document.getElementById("OP").value = prob[0] * 100
 		 } 
 		
 		// Run the async function to load the model
@@ -269,7 +269,7 @@
 		<option value="Unsubscribed">Unsubscribed</option>
 	</select><br><br>
 	<input type="button" value = "Predict" onclick="predict()"/><br><br>
-	<label for="Output">Conversion</label>
+	<label for="Output">Conversion %</label>
 	<input type="text" id="OP"/><br><br>
 </body>
 </html>
